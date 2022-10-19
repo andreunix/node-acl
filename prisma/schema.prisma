@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator erd {
+  provider = "prisma-erd-generator"
+  output = "../ERD.svg"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String    @id @default(uuid())
+  username    String    @unique
+  password    String
+  created_at  DateTime  @default(now())
+  roles       Role[]
+  permission      Permission[]
+
+  @@map("users") 
+}
+
+model Role {
+  id              String    @id @default(uuid())
+  name            String
+  description     String
+  created_at      DateTime  @default(now())
+  user            User[]
+  permission      Permission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id              String    @id @default(uuid())
+  name            String
+  description     String
+  created_at      DateTime  @default(now())
+  user            User[]
+  roles           Role[]
+
+
+  @@map("permissions")
+}
+
+model Product {
+  id              String    @id @default(uuid())
+  name            String
+  description     String
+  created_at      DateTime  @default(now())
+}
